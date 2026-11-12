@@ -3,6 +3,7 @@ const cors = require('cors');
 require('dotenv').config();
 const connectDB = require('./config/db');
 const projectRoutes = require('./routes/projectRoutes');
+const errorHandler = require('./middleware/error');
 
 //Connect the database
 connectDB();
@@ -25,6 +26,9 @@ app.get('/', (req,res) => {
 app.get('/api/hello', (req,res) => {
     res.json({ message: 'Hello,World! Backend is running'});
 });
+
+// Central Error Handler (MUST BE AFTER ROUTES)
+app.use(errorHandler);
 
 //Start Server
 app.listen(PORT, () => {
