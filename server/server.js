@@ -8,6 +8,7 @@ const experienceRoutes = require('./routes/experienceRoutes');
 const educationRoutes = require('./routes/educationRoutes');
 const messageRoutes = require('./routes/messageRoutes');
 const errorHandler = require('./middleware/error');
+const profileRoutes = require('./routes/profileRoutes');
 
 // Connect Database
 connectDB();
@@ -20,6 +21,7 @@ app.use(cors());
 app.use(express.json());
 
 // Mount Routes
+app.use('/api/profile', profileRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/skills', skillRoutes);
 app.use('/api/experience', experienceRoutes);
