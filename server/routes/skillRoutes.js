@@ -7,16 +7,15 @@ const {
     updateSkill,
     deleteSkill
 } = require('../controllers/skillController');
+const { protect } = require('../middleware/auth');
 
-// /api/skills
 router.route('/')
-    .get(getSkills)
-    .post(createSkill);
+    .get(getSkills)               // Public
+    .post(protect, createSkill);   // Protected!
 
-// /api/skills/:id
 router.route('/:id')
-    .get(getSkillById)
-    .put(updateSkill)
-    .delete(deleteSkill);
+    .get(getSkillById)            // Public
+    .put(protect, updateSkill)     // Protected!
+    .delete(protect, deleteSkill); // Protected!
 
 module.exports = router;

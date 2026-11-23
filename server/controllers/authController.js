@@ -35,7 +35,6 @@ const register = asyncHandler(async (req, res, next) => {
         return next(new ErrorResponse('Please provide both email and password', 400));
     }
 
-    // Security Check: Lock registration if an admin already exists
     const adminExists = await Admin.countDocuments();
     if (adminExists > 0) {
         return next(
@@ -60,19 +59,16 @@ const register = asyncHandler(async (req, res, next) => {
 const login = asyncHandler(async (req, res, next) => {
     const { email, password } = req.body;
 
-    // Validate presence
     if (!email || !password) {
         return next(new ErrorResponse('Please provide an email and password', 400));
     }
 
-    // Check for admin (explicitly select +password)
     const admin = await Admin.findOne({ email }).select('+password');
 
     if (!admin) {
         return next(new ErrorResponse('Invalid credentials', 401));
     }
 
-    // Check if password matches
     const isMatch = await admin.matchPassword(password);
 
     if (!isMatch) {
@@ -82,7 +78,37 @@ const login = asyncHandler(async (req, res, next) => {
     sendTokenResponse(admin, 200, res);
 });
 
+// @desc    Get currently logged in admin
+// @route   GET /api/auth/me
+// @access  Private
+const getMe = asyncHandler(async (req, res, next) => {
+    const admin = await Admin.findById(req.admin.id);
+
+    res.status(200).json({
+        success: true,
+        data: admin
+    });
+});
+
+// @desc    Log out admin / clear cookie
+// @route   POST /api/auth/logout
+// @access  Private
+const logout = asyncHandler(async (req, res, next) => {
+    res.cookie('token', 'none', {
+        expires: new Date(Date.now() + 10 * 1000), // Expire in 10s
+        httpOnly: true
+    });
+
+    res.status(200).json({
+        success: true,
+        message: 'Logged out successfully',
+        data: {}
+    });
+});
+
 module.exports = {
     register,
-    login
+    login,
+    getMe,
+    logout
 };

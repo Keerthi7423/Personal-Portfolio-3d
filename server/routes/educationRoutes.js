@@ -7,16 +7,17 @@ const {
     updateEducation,
     deleteEducation
 } = require('../controllers/educationController');
+const { protect } = require('../middleware/auth');
 
 // /api/education
 router.route('/')
-    .get(getEducation)
-    .post(createEducation);
+    .get(getEducation)               // Public
+    .post(protect, createEducation);  // Protected!
 
 // /api/education/:id
 router.route('/:id')
-    .get(getEducationById)
-    .put(updateEducation)
-    .delete(deleteEducation);
+    .get(getEducationById)           // Public
+    .put(protect, updateEducation)    // Protected!
+    .delete(protect, deleteEducation);// Protected!
 
 module.exports = router;

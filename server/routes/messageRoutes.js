@@ -6,18 +6,16 @@ const {
     toggleMessageRead,
     deleteMessage
 } = require('../controllers/messageController');
+const { protect } = require('../middleware/auth');
 
-// /api/messages
 router.route('/')
-    .get(getMessages)
-    .post(createMessage);
+    .get(protect, getMessages)     // Protected (Admin only reads inbox)
+    .post(createMessage);          // Public (Recruiters send messages)
 
-// /api/messages/:id/read (Toggle read status)
 router.route('/:id/read')
-    .put(toggleMessageRead);
+    .put(protect, toggleMessageRead); // Protected
 
-// /api/messages/:id
 router.route('/:id')
-    .delete(deleteMessage);
+    .delete(protect, deleteMessage);  // Protected
 
 module.exports = router;
