@@ -1,13 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const {
-    getProfile,
-    updateProfile
-} = require('../controllers/profileController');
+const { getProfile, updateProfile } = require('../controllers/profileController');
+const { protect } = require('../middleware/auth');
 
-// /api/profile
 router.route('/')
-    .get(getProfile)
-    .put(updateProfile);
+    .get(getProfile)               // Public
+    .put(protect, updateProfile);  // Protected!
 
 module.exports = router;

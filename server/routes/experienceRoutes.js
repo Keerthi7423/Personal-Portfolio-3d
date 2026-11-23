@@ -7,16 +7,17 @@ const {
     updateExperience,
     deleteExperience
 } = require('../controllers/experienceController');
+const { protect } = require('../middleware/auth');
 
 // /api/experience
 router.route('/')
-    .get(getExperience)
-    .post(createExperience);
+    .get(getExperience)               // Public
+    .post(protect, createExperience);  // Protected!
 
 // /api/experience/:id
 router.route('/:id')
-    .get(getExperienceById)
-    .put(updateExperience)
-    .delete(deleteExperience);
+    .get(getExperienceById)           // Public
+    .put(protect, updateExperience)    // Protected!
+    .delete(protect, deleteExperience);// Protected!
 
 module.exports = router;
