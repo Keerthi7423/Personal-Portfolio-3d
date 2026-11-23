@@ -9,6 +9,8 @@ const educationRoutes = require('./routes/educationRoutes');
 const messageRoutes = require('./routes/messageRoutes');
 const errorHandler = require('./middleware/error');
 const profileRoutes = require('./routes/profileRoutes');
+const cookieParser = require('cookie-parser');
+const authRoutes = require('./routes/authRoutes');
 
 // Connect Database
 connectDB();
@@ -19,8 +21,10 @@ const PORT = process.env.PORT || 5000;
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
 
 // Mount Routes
+app.use('/api/auth', authRoutes);
 app.use('/api/profile', profileRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/skills', skillRoutes);
