@@ -7,15 +7,16 @@ const {
     deleteMessage
 } = require('../controllers/messageController');
 const { protect } = require('../middleware/auth');
+const { messageLimiter } = require('../middleware/rateLimit');
 
 router.route('/')
-    .get(protect, getMessages)     // Protected (Admin only reads inbox)
-    .post(createMessage);          // Public (Recruiters send messages)
+    .get(protect, getMessages)
+    .post(messageLimiter, createMessage); // Protect contact form against spam!
 
 router.route('/:id/read')
-    .put(protect, toggleMessageRead); // Protected
+    .put(protect, toggleMessageRead);
 
 router.route('/:id')
-    .delete(protect, deleteMessage);  // Protected
+    .delete(protect, deleteMessage);
 
 module.exports = router;
